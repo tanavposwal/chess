@@ -3,6 +3,8 @@ import { Button } from "../components/Button";
 import { Chess } from "chess.js";
 import { ChessBoard } from "../components/ChessBoard";
 import { useSocket } from "../hooks/useSocket";
+import toast from "react-hot-toast";
+import MoveSound from "/move-self.mp3";
 
 // TODO: Move together, there's code repetition here
 export const INIT_GAME = "init_game";
@@ -11,7 +13,7 @@ export const GAME_OVER = "game_over";
 
 export default function Game() {
   const socket = useSocket();
-  const [chess, setChess] = useState(new Chess());
+  const [chess] = useState(new Chess());
   const [board, setBoard] = useState(chess.board());
   const [started, setStarted] = useState(false);
   const [mychance, setMyChance] = useState(false);
@@ -19,6 +21,7 @@ export default function Game() {
   const [color, setColor] = useState("");
   const [pending, setPending] = useState(false);
   const [moves, setMoves] = useState<{ from: string; to: string }[]>([]);
+  const moveAudio = new Audio(MoveSound);
 
   useEffect(() => {
     if (!socket) {
@@ -37,6 +40,8 @@ export default function Game() {
           } else {
             setMyChance(false);
           }
+          toast.success("Match started.");
+
           break;
         case MOVE:
           const move = message.payload;
@@ -44,6 +49,13 @@ export default function Game() {
           setMoves((prev: any) => [...prev, move]);
           setBoard(chess.board());
           setMyChance(!mychance);
+          if (chess.isCheck()) {
+            toast.error("Your are checked");
+          }
+          if (chess.isStalemate()) {
+            toast.error("Condition of Draw");
+          }
+          moveAudio.play();
           break;
         case GAME_OVER:
           setWinner(message.payload.winner);
@@ -69,6 +81,7 @@ export default function Game() {
               setMoves={setMoves}
               started={started}
               mychance={mychance}
+              isFlipped={color == "white" ? false : true}
             />
           </div>
           <div className="col-span-2 bg-slate-900 w-full rounded-lg flex">
@@ -79,8 +92,9 @@ export default function Game() {
                   <h1 className="text-sm text-slate-300">
                     {mychance ? "YOUR's" : "OPPONENT's"} CHANCE
                   </h1>
-
-                  <p className="text-sm text-slate-400 mt-2">turns</p>
+                  <p className="text-sm text-slate-200 mt-2 font-semibold">
+                    turns
+                  </p>
                   <ul className="list-decimal px-5 overflow-y-auto py-1">
                     {moves.map((move) => (
                       <li
@@ -119,19 +133,22 @@ export default function Game() {
                 </div>
               )}
 
-              {pending ? <h3 className="text-md">waiting for other player to join</h3> : 
-              <Button
-                onClick={() => {
-                  socket.send(
-                    JSON.stringify({
-                      type: INIT_GAME,
-                    })
-                  );
-                  setPending(true)
-                }}
-              >
-                Play
-              </Button>}
+              {pending ? (
+                <h3 className="text-md">waiting for other player to join</h3>
+              ) : (
+                <Button
+                  onClick={() => {
+                    socket.send(
+                      JSON.stringify({
+                        type: INIT_GAME,
+                      })
+                    );
+                    setPending(true);
+                  }}
+                >
+                  Play
+                </Button>
+              )}
             </div>
           </div>
         )}
