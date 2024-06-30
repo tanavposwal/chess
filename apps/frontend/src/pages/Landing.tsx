@@ -3,6 +3,7 @@ import { Button } from "../components/Button";
 
 export default function Landing() {
   const navigate = useNavigate();
+
   return (
     <div className="flex justify-center items-center h-screen">
       <div className="max-w-screen-lg">

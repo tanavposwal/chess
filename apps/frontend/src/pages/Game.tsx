@@ -24,6 +24,19 @@ export default function Game() {
   const moveAudio = new Audio(MoveSound);
 
   useEffect(() => {
+    if (socket) {
+      socket.send(
+        JSON.stringify({
+          type: "LOGIN",
+          payload: {
+            jwt: localStorage.getItem("token")
+          }
+        })
+      );
+    }
+  }, [])
+
+  useEffect(() => {
     if (!socket) {
       return;
     }

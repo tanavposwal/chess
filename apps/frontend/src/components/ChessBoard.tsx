@@ -40,6 +40,8 @@ export const ChessBoard = ({
   const [from, setFrom] = useState<null | Square>(null);
   const moveAudio = new Audio(MoveSound);
 
+  // show messages like check, attacked
+
   return (
     <div className="rounded-lg overflow-hidden">
       {(isFlipped ? board.slice().reverse() : board).map((row, i) => {
