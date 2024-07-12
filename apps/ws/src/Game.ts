@@ -39,7 +39,6 @@ export class Game {
         },
       })
     );
-    console.log("game start")
   }
 
   makeMove(

@@ -37,7 +37,7 @@ export const ChessBoard = ({
   isFlipped: boolean;
 }) => {
   const [from, setFrom] = useState<null | Square>(null);
-  //const moveAudio = new Audio("/move-self.mp3");
+  const moveAudio = new Audio("/move-self.mp3");
 
   // show messages like check, attacked
 
@@ -74,7 +74,7 @@ export const ChessBoard = ({
                           from,
                           to: squareRepresentation,
                         });
-                        //moveAudio.play();
+                        moveAudio.play();
                         setBoard(chess.board());
                         setMoves((prev: any) => [
                           ...prev,

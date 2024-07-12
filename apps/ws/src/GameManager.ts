@@ -4,7 +4,7 @@ import { Game } from "./Game";
 
 interface User {
   email: string;
-  socket: WebSocket
+  socket: WebSocket;
 }
 
 export class GameManager {
@@ -21,12 +21,10 @@ export class GameManager {
   addUser(data: User) {
     this.users.push(data);
     this.handleMessage(data);
-    console.log("user added")
   }
 
   removeUser(socket: WebSocket) {
     this.users.filter((user) => user.socket !== socket);
-    console.log("user removed")
   }
 
   private handleMessage(user: User) {
@@ -38,16 +36,16 @@ export class GameManager {
           const game = new Game(this.pendingUser, user);
           this.games.push(game);
           this.pendingUser = null;
-          console.log("game matched")
         } else {
           this.pendingUser = user;
-          console.log("added pending user")
         }
       }
 
       if (message.type === MOVE) {
         const game = this.games.find(
-          (game) => game.player1.socket === user.socket || game.player2.socket === user.socket
+          (game) =>
+            game.player1.socket === user.socket ||
+            game.player2.socket === user.socket
         );
         if (game) {
           game.makeMove(user.socket, message.payload);

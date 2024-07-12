@@ -6,7 +6,7 @@ import { ChessBoard } from "@/components/ChessBoard";
 import { useSocket } from "@/hooks/useSocket";
 import toast from "react-hot-toast";
 import { signIn, signOut, useSession } from "next-auth/react";
-import UserInfo from "@/components/UserInfo";
+import {UserInfo, UserImage} from "@/components/UserInfo";
 
 // TODO: Move together, there's code repetition here
 export const INIT_GAME = "init_game";
@@ -25,7 +25,8 @@ export default function Game() {
   const [moves, setMoves] = useState<{ from: string; to: string }[]>([]);
   const [you, setYou] = useState("");
   const [opponent, setOpponent] = useState("");
-  //const moveAudio = new Audio("/move-play.mp3");
+  const moveAudio = new Audio("/move-self.mp3");
+  const captureAudio = new Audio("/capture.mp3");
   const session = useSession();
 
   useEffect(() => {
@@ -63,12 +64,13 @@ export default function Game() {
           if (chess.isStalemate()) {
             toast.error("Condition of Draw");
           }
-          //moveAudio.play();
+          moveAudio.play();
           break;
 
         case GAME_OVER:
-          setWinner(message.payload.winner);
+          setWinner(message.payload.user);
           setStarted(false);
+          captureAudio.play()
           break;
       }
     };
@@ -102,10 +104,10 @@ export default function Game() {
 
           {/* side panel */}
           {started && (
-            <div className="bg-slate-900 rounded-lg my-8">
+            <div className="bg-slate-900 rounded-lg my-10 w-48">
               <div className="p-3">
                 <div>
-                  <h1 className="text-xl font-bold">
+                  <h1 className="text-md font-bold">
                     {mychance ? "YOUR's" : "OPPONENT's"} CHANCE
                   </h1>
                   <p className="text-sm text-slate-200 mt-2 font-semibold">
@@ -140,11 +142,7 @@ export default function Game() {
 
               {winner && (
                 <div className="flex flex-col justify-center items-center mb-4 gap-2">
-                  <img
-                    className="w-20"
-                    src={`https://assets-themes.chess.com/image/ejgfv/150/${winner[0]}k.png`}
-                    alt=""
-                  />
+                  <UserImage email={winner} />
                   <h3 className="text-lg font-bold uppercase">{winner} wins</h3>
                 </div>
               )}
