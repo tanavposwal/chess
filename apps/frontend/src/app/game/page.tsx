@@ -8,10 +8,9 @@ import toast from "react-hot-toast";
 import { signIn, signOut, useSession } from "next-auth/react";
 import {UserInfo, UserImage} from "@/components/UserInfo";
 
-// TODO: Move together, there's code repetition here
-export const INIT_GAME = "init_game";
-export const MOVE = "move";
-export const GAME_OVER = "game_over";
+const INIT_GAME = "init_game";
+const MOVE = "move";
+const GAME_OVER = "game_over";
 
 export default function Game() {
   const socket = useSocket();
@@ -25,11 +24,14 @@ export default function Game() {
   const [moves, setMoves] = useState<{ from: string; to: string }[]>([]);
   const [you, setYou] = useState("");
   const [opponent, setOpponent] = useState("");
-  const moveAudio = new Audio("/move-self.mp3");
-  const captureAudio = new Audio("/capture.mp3");
+  const [moveAudio, setMoveAudio] = useState<HTMLAudioElement | null>(null)
+  const [captureAudio, setCaptureAudio] = useState<HTMLAudioElement | null>(null)
   const session = useSession();
 
   useEffect(() => {
+    setMoveAudio(new Audio("/move-self.mp3"))
+    setCaptureAudio(new Audio("/capture.mp3"))
+
     if (!socket) {
       return;
     }
@@ -64,13 +66,13 @@ export default function Game() {
           if (chess.isStalemate()) {
             toast.error("Condition of Draw");
           }
-          moveAudio.play();
+          if (moveAudio) moveAudio.play();
           break;
 
         case GAME_OVER:
           setWinner(message.payload.user);
           setStarted(false);
-          captureAudio.play()
+          if (captureAudio) captureAudio.play()
           break;
       }
     };

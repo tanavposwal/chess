@@ -1,7 +1,8 @@
 import { Chess, Color, PieceSymbol, Square } from "chess.js";
-import { useState } from "react";
-import { MOVE } from "@/app/game/page";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+
+const MOVE = "move";
 
 export const ChessBoard = ({
   chess,
@@ -37,9 +38,13 @@ export const ChessBoard = ({
   isFlipped: boolean;
 }) => {
   const [from, setFrom] = useState<null | Square>(null);
-  const moveAudio = new Audio("/move-self.mp3");
+  const [moveAudio, setMoveAudio] = useState<HTMLAudioElement | null>(null)
 
   // show messages like check, attacked
+
+  useEffect(() => {
+    setMoveAudio(new Audio("/move-self.mp3"))
+  }, [])
 
   return (
     <div className="rounded-lg overflow-hidden">
@@ -74,7 +79,7 @@ export const ChessBoard = ({
                           from,
                           to: squareRepresentation,
                         });
-                        moveAudio.play();
+                        if (moveAudio) moveAudio.play();
                         setBoard(chess.board());
                         setMoves((prev: any) => [
                           ...prev,
