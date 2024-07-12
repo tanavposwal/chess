@@ -90,9 +90,9 @@ export const ChessBoard = ({
                     }
                   }}
                   key={j}
-                  className={`w-20 h-20 select-none transition relative ${
+                  className={`w-16 h-16 select-none transition relative ${
                     (i + j) % 2 === 0 ? "bg-chess-light" : "bg-chess-dark"
-                  } ${from == squareRepresentation && "brightness-90"}`}
+                  } ${from == squareRepresentation && "outline outline-2 outline-cyan-600 z-10"}`}
                 >
                   <span
                     className={`font-bold text-xs ml-0.5 absolute ${

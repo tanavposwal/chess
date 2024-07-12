@@ -8,10 +8,14 @@ const wss = new WebSocketServer({ port: PORT });
 const gameManager = new GameManager()
 
 wss.on('connection', function connection(ws) {
+  console.log("a connection")
   ws.on("message", (data) => {
     const message = JSON.parse(data.toString());
     if (message.type == "LOGIN") {
-      gameManager.addUser({ id: message.payload.userID, socket: ws });
+      console.log("a login", message.payload.email)
+      if (message.payload.email) {
+      gameManager.addUser({ email: message.payload.email, socket: ws });
+      }
     }
   });
   ws.on("disconnect", () => gameManager.removeUser(ws))

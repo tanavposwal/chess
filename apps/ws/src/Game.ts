@@ -3,7 +3,7 @@ import { Chess } from "chess.js";
 import { GAME_OVER, INIT_GAME, MOVE } from "./messages";
 
 interface User {
-  id: string;
+  email: string;
   socket: WebSocket;
 }
 
@@ -24,8 +24,8 @@ export class Game {
         type: INIT_GAME,
         payload: {
           color: "white",
-          you: player1,
-          opponent: player2,
+          you: player1.email,
+          opponent: player2.email,
         },
       })
     );
@@ -34,11 +34,12 @@ export class Game {
         type: INIT_GAME,
         payload: {
           color: "black",
-          you: player2,
-          opponent: player1,
+          you: player2.email,
+          opponent: player1.email,
         },
       })
     );
+    console.log("game start")
   }
 
   makeMove(
@@ -81,7 +82,7 @@ export class Game {
           type: GAME_OVER,
           payload: {
             winner: this.board.turn() === "w" ? "black" : "white",
-            user: winner.id
+            user: winner.email
           },
         })
       );
@@ -90,7 +91,7 @@ export class Game {
           type: GAME_OVER,
           payload: {
             winner: this.board.turn() === "w" ? "black" : "white",
-            user: winner.id
+            user: winner.email
           },
         })
       );

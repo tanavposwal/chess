@@ -19,10 +19,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className + " h-screen bg-stone-900 text-white"}>
-      {/* <SessionProvider> */}
+      <SessionProvider>
         <Toaster position="top-right" reverseOrder={true} />
         {children}
-      {/* </SessionProvider> */}
+      </SessionProvider>
       </body>
     </html>
   );

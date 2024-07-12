@@ -3,7 +3,7 @@ import { INIT_GAME, MOVE } from "./messages";
 import { Game } from "./Game";
 
 interface User {
-  id: string;
+  email: string;
   socket: WebSocket
 }
 
@@ -21,10 +21,12 @@ export class GameManager {
   addUser(data: User) {
     this.users.push(data);
     this.handleMessage(data);
+    console.log("user added")
   }
 
   removeUser(socket: WebSocket) {
     this.users.filter((user) => user.socket !== socket);
+    console.log("user removed")
   }
 
   private handleMessage(user: User) {
@@ -36,8 +38,10 @@ export class GameManager {
           const game = new Game(this.pendingUser, user);
           this.games.push(game);
           this.pendingUser = null;
+          console.log("game matched")
         } else {
           this.pendingUser = user;
+          console.log("added pending user")
         }
       }
 
