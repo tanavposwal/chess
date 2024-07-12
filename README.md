@@ -6,5 +6,4 @@
 ## Manual
 
 - WS - PORT:8080
-- Backend - PORT:3001
-- Frontend - PORT:5173
+- Frontend - PORT:3000
