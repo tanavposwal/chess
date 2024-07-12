@@ -1,10 +1,12 @@
+"use client"
+
 import { useEffect, useState } from "react";
-import { Button } from "../components/Button";
+import { Button } from "@/components/Button";
 import { Chess } from "chess.js";
-import { ChessBoard } from "../components/ChessBoard";
-import { useSocket } from "../hooks/useSocket";
+import { ChessBoard } from "@/components/ChessBoard";
+import { useSocket } from "@/hooks/useSocket";
 import toast from "react-hot-toast";
-import MoveSound from "/move-self.mp3";
+import { useSession } from "next-auth/react";
 
 // TODO: Move together, there's code repetition here
 export const INIT_GAME = "init_game";
@@ -21,7 +23,8 @@ export default function Game() {
   const [color, setColor] = useState("");
   const [pending, setPending] = useState(false);
   const [moves, setMoves] = useState<{ from: string; to: string }[]>([]);
-  const moveAudio = new Audio(MoveSound);
+  //const moveAudio = new Audio("/move-play.mp3");
+  const session = useSession()
 
   useEffect(() => {
     if (socket) {
@@ -29,7 +32,7 @@ export default function Game() {
         JSON.stringify({
           type: "LOGIN",
           payload: {
-            jwt: localStorage.getItem("token")
+            id: session.data?.user?.id
           }
         })
       );
@@ -68,7 +71,7 @@ export default function Game() {
           if (chess.isStalemate()) {
             toast.error("Condition of Draw");
           }
-          moveAudio.play();
+          //moveAudio.play();
           break;
         case GAME_OVER:
           setWinner(message.payload.winner);
@@ -129,6 +132,7 @@ export default function Game() {
             </div>
           </div>
         </div>
+
         {!started && (
           <div className="h-screen w-full bg-black/30 absolute top-0 left-0 flex justify-center items-center">
             <div className="p-8 bg-slate-800 rounded-xl flex flex-col items-center justify-center">
@@ -162,6 +166,8 @@ export default function Game() {
                   Play
                 </Button>
               )}
+
+              {session.data?.user?.name}
             </div>
           </div>
         )}
