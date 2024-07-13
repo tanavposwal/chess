@@ -83,8 +83,8 @@ export default function Game() {
   return (
     <div className="justify-center flex items-center h-screen w-screen">
       <div className="">
-        <div className="flex gap-4 py-2 px-4">
-          <div className="flex flex-col gap-2">
+        <div className="flex md:gap-4 gap-2 md:flex-row flex-col">
+          <div className="flex flex-col md:gap-2 gap-1">
             <div>
               {opponent && <UserInfo email={opponent} />}
             </div>
@@ -106,31 +106,30 @@ export default function Game() {
 
           {/* side panel */}
           {started && (
-            <div className="bg-slate-900 rounded-lg my-10 w-48">
-              <div className="p-3">
+            <div className="w-64 rounded-md bg-stone-700">
+              <div className="py-4 px-6">
                 <div>
-                  <h1 className="text-md font-bold">
-                    {mychance ? "YOUR's" : "OPPONENT's"} CHANCE
+                  <h1 className="text-lg font-bold">
+                    {mychance ? "YOUR" : "OPPONENT"} chance
                   </h1>
-                  <p className="text-sm text-slate-200 mt-2 font-semibold">
-                    turns
-                  </p>
-                  <ul className="list-decimal px-5 overflow-y-auto py-1">
+                  <div className="mt-2 border-t border-stone-600 pt-2">
+                  <p className="text-sm font-semibold text-stone-200">Turns</p>
+                  <ul className="list-decimal overflow-y-auto py-2 px-5">
                     {moves.map((move) => (
                       <li
                         key={move.from + move.to}
-                        className="mb-2 pl-2 text-xs text-slate-400 font-mono"
+                        className="font-mono text-xs text-stone-400 mb-2"
                       >
-                        <span className="bg-slate-600 px-2 py-0.5 rounded text-white border border-slate-500 mr-1 font-mono">
+                        <span className="rounded-sm border-b border-stone-800 bg-stone-600 py-0.5 px-2">
                           {move.from}
                         </span>
-                        -
-                        <span className="bg-slate-600 px-2 py-0.5 rounded text-white border border-slate-500 ml-1 font-mono">
+                        <span className="rounded-sm border-b border-stone-800 bg-stone-600 py-0.5 px-2">
                           {move.to}
                         </span>
                       </li>
                     ))}
                   </ul>
+                  </div>
                 </div>
               </div>
             </div>
@@ -139,7 +138,7 @@ export default function Game() {
 
         {!started && (
           <div className="h-screen w-full bg-black/30 absolute top-0 left-0 flex justify-center items-center">
-            <div className="p-8 bg-slate-800 rounded-xl flex flex-col items-center justify-center">
+            <div className="px-16 py-12 bg-stone-700 rounded-xl flex flex-col items-center justify-center">
               <h1 className="text-3xl font-bold mb-4">Play chess online</h1>
 
               {winner && (
@@ -150,7 +149,7 @@ export default function Game() {
               )}
 
               {pending && (
-                <h3 className="text-md">waiting for other player to join</h3>
+                <h3 className="text-md text-stone-400">waiting for other player to join</h3>
               )}
 
               {!pending && (
@@ -161,18 +160,12 @@ export default function Game() {
                     <div>
                       {session.data?.user ? (
                         <div className="flex flex-col gap-3 justify-end">
-                          <div className="flex gap-3 items-center justify-center">
+                          <div className="flex gap-3 items-center">
                             <img
                               src={session.data.user.image!}
-                              className="rounded-full w-10 h-10"
+                              className="rounded-full w-8 h-8"
                             />
-                            <h3>{session.data.user.name}</h3>
-                            <button
-                              className="bg-red-500 rounded-md px-2"
-                              onClick={() => signOut()}
-                            >
-                              Sign out
-                            </button>
+                            <h3 className="text-sm">{session.data.user.name}</h3>
                           </div>
                           <button
                             className="px-4 py-2 text-xl bg-green-500 hover:bg-green-600 hover:border-green-800 text-white font-bold rounded-xl border-b-4 border-green-700 transition-colors ease-in-out"

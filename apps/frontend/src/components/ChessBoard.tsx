@@ -47,7 +47,7 @@ export const ChessBoard = ({
   }, [])
 
   return (
-    <div className="rounded-lg overflow-hidden">
+    <div>
       {(isFlipped ? board.slice().reverse() : board).map((row, i) => {
         i = isFlipped ? i + 1 : 8 - i;
         return (
@@ -95,23 +95,16 @@ export const ChessBoard = ({
                     }
                   }}
                   key={j}
-                  className={`w-16 h-16 select-none transition relative ${
+                  className={`md:w-20 sm:w-16 w-12 md:h-20 sm:h-16 h-12 select-none relative ${
                     (i + j) % 2 === 0 ? "bg-chess-light" : "bg-chess-dark"
-                  } ${from == squareRepresentation && "outline outline-2 outline-cyan-600 z-10"}`}
+                  } ${from == squareRepresentation && "border-2 md:border-4  outline-yellow-50 z-10 bg-yellow-200"}`}
                 >
-                  <span
-                    className={`font-bold text-xs ml-0.5 absolute ${
-                      (i + j) % 2 === 0 ? "text-chess-dark" : "text-chess-light"
-                    }`}
-                  >
-                    {squareRepresentation}
-                  </span>
                   {started && (
                     <div className="w-full justify-center items-center flex h-full">
                       <div className="h-full justify-center items-center flex flex-col">
                         {square ? (
                           <img
-                            className="w-16 cursor-grab"
+                            className="md:w-20 sm:w-16 w-12 cursor-grab"
                             src={`https://assets-themes.chess.com/image/ejgfv/150/${
                               square.color + square.type
                             }.png`}

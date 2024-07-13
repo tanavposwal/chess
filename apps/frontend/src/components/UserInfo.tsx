@@ -17,12 +17,12 @@ export function UserInfo({ email }: { email: string }) {
 
   return (
     <div>
-      <div className="flex gap-3">
+      <div className="flex md:gap-3 gap-2">
         <img
           src={image}
-          className={`rounded-full w-8 h-8 ${image ? "opacity-100" : "opacity-0"}`}
+          className={`md:w-10 w-6 md:h-10 h-6 ${image ? "opacity-100" : "opacity-0"}`}
         />
-        <h3 className="text-lg">{name}</h3>
+        <h3 className="md:text-md text-md font-semibold">{name}</h3>
       </div>
     </div>
   );
