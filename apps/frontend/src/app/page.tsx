@@ -57,7 +57,7 @@ async function Home() {
   return (
     <div className="max-w-screen-lg mx-auto p-8">
       <div className="w-full flex justify-between items-center">
-        <div className="flex gap-5 items-center">
+        <div className="flex gap-5 items-center justify-center w-fit h-fit">
           <img src={session?.user?.image!} className="w-10 rounded-lg " />
           <p className="text-lg font-bold">{session?.user?.name!}</p>
           <form
@@ -69,7 +69,7 @@ async function Home() {
           >
             <button
               type="submit"
-              className="mt-5 border rounded-md px-2 text-xs border-stone-400 hover:bg-stone-600 hover:border-white transition-colors"
+              className="border rounded-md px-2 text-xs border-stone-400 hover:bg-stone-600 hover:border-white transition-colors"
             >
               Signout
             </button>

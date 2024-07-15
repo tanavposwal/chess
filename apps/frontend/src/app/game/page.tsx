@@ -81,7 +81,7 @@ export default function Game() {
   if (!socket) return <div>Connecting...</div>;
 
   return (
-    <div className="justify-center flex items-center h-screen w-screen">
+    <div className="justify-center flex items-center min-h-screen w-screen overflow-y-auto">
       <div className="">
         <div className="flex md:gap-4 gap-2 md:flex-row flex-col">
           <div className="flex flex-col md:gap-2 gap-1">
@@ -106,7 +106,7 @@ export default function Game() {
 
           {/* side panel */}
           {started && (
-            <div className="w-64 rounded-md bg-stone-700">
+            <div className="w-64 rounded-md bg-stone-700 max-h-96">
               <div className="py-4 px-6">
                 <div>
                   <h1 className="text-lg font-bold">
@@ -114,11 +114,11 @@ export default function Game() {
                   </h1>
                   <div className="mt-2 border-t border-stone-600 pt-2">
                   <p className="text-sm font-semibold text-stone-200">Turns</p>
-                  <ul className="list-decimal overflow-y-auto py-2 px-5">
+                  <ul className="list-decimal py-2 px-5 overflow-y-auto">
                     {moves.map((move) => (
                       <li
                         key={move.from + move.to}
-                        className="font-mono text-xs text-stone-400 mb-2"
+                        className="font-mono text-xs text-stone-400 mb-2 flex gap-2"
                       >
                         <span className="rounded-sm border-b border-stone-800 bg-stone-600 py-0.5 px-2">
                           {move.from}

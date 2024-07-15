@@ -95,7 +95,7 @@ export const ChessBoard = ({
                     }
                   }}
                   key={j}
-                  className={`md:w-20 sm:w-16 w-12 md:h-20 sm:h-16 h-12 select-none relative ${
+                  className={`md:w-16 sm:w-16 w-12 md:h-16 sm:h-16 h-12 select-none relative ${
                     (i + j) % 2 === 0 ? "bg-chess-light" : "bg-chess-dark"
                   } ${from == squareRepresentation && "border-2 md:border-4  outline-yellow-50 z-10 bg-yellow-200"}`}
                 >
