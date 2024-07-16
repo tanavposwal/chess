@@ -28,7 +28,7 @@ export function UserInfo({ email }: { email: string }) {
   );
 }
 
-export function UserImage({ email }: { email: string }) {
+export function UserImage({ email, color }: { email: string; color: string }) {
   const [image, setImage] = useState("");
 
   useEffect(() => {
@@ -40,9 +40,15 @@ export function UserImage({ email }: { email: string }) {
   }, []);
 
   return (
-    <img
-      src={image}
-      className={`rounded-full w-20 h-20 ${image ? "opacity-100" : "opacity-0"}`}
-    />
+    <div className="relative">
+      <img
+        src={image}
+        className={`rounded-lg w-20 h-20 ${image ? "opacity-100" : "opacity-0"}`}
+      />
+      <img
+        src={`https://assets-themes.chess.com/image/ejgfv/150/${color[0]}k.png`}
+        className="w-9 h-9 absolute bottom-0 right-0 z-10"
+      />
+    </div>
   );
 }

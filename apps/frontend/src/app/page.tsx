@@ -90,21 +90,21 @@ async function Home() {
         </div>
         <div className="flex gap-4 overflow-x-auto mt-4">
           <Link
-            className="min-w-52 rounded-lg overflow-hidden flex flex-col items-center bg-stone-900 hover:bg-stone-700 transition-colors cursor-pointer border-b-4 border-black"
+            className="min-w-44 rounded-lg overflow-hidden flex flex-col items-center bg-stone-900 hover:bg-stone-700 transition-colors cursor-pointer border-b-4 border-black"
             href="/game"
           >
             <Image src="/chessboard.png" alt="board" width={500} height={500} />
             <p className="text-sm py-3 font-bold">With Random Player</p>
           </Link>
           <Link
-            className="min-w-52 rounded-lg overflow-hidden flex flex-col items-center bg-stone-900 hover:bg-stone-700 transition-colors cursor-pointer border-b-4 border-black"
+            className="min-w-44 rounded-lg overflow-hidden flex flex-col items-center bg-stone-900 hover:bg-stone-700 transition-colors cursor-pointer border-b-4 border-black"
             href="/game"
           >
             <Image src="/chessboard.png" alt="board" width={500} height={500} />
             <p className="text-sm py-3 font-bold">With a Friend</p>
           </Link>
           <Link
-            className="min-w-52 rounded-lg overflow-hidden flex flex-col items-center bg-stone-900 hover:bg-stone-700 transition-colors cursor-pointer border-b-4 border-black"
+            className="min-w-44 rounded-lg overflow-hidden flex flex-col items-center bg-stone-900 hover:bg-stone-700 transition-colors cursor-pointer border-b-4 border-black"
             href="/game"
           >
             <Image src="/chessboard.png" alt="board" width={500} height={500} />

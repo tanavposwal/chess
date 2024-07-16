@@ -66,37 +66,6 @@ export class Game {
       return;
     }
 
-    if (this.board.isGameOver()) {
-      // Send the game over message to both players
-      let winner: User;
-
-      if (this.moveCount % 2 === 0) {
-        winner = this.player1
-      } else {
-        winner = this.player2
-      }
-
-      this.player1.socket.emit(
-        JSON.stringify({
-          type: GAME_OVER,
-          payload: {
-            winner: this.board.turn() === "w" ? "black" : "white",
-            user: winner.email
-          },
-        })
-      );
-      this.player2.socket.emit(
-        JSON.stringify({
-          type: GAME_OVER,
-          payload: {
-            winner: this.board.turn() === "w" ? "black" : "white",
-            user: winner.email
-          },
-        })
-      );
-      return;
-    }
-
     if (this.moveCount % 2 === 0) {
       this.player2.socket.send(
         JSON.stringify({
@@ -113,5 +82,36 @@ export class Game {
       );
     }
     this.moveCount++;
+
+    if (this.board.isGameOver()) {
+      // Send the game over message to both players
+      let winner: User;
+
+      if (this.moveCount % 2 === 0) {
+        winner = this.player1
+      } else {
+        winner = this.player2
+      }
+      
+      this.player1.socket.send(
+        JSON.stringify({
+          type: GAME_OVER,
+          payload: {
+            winner: this.board.turn() === "w" ? "black" : "white",
+            user: winner.email
+          },
+        })
+      );
+      this.player2.socket.send(
+        JSON.stringify({
+          type: GAME_OVER,
+          payload: {
+            winner: this.board.turn() === "w" ? "black" : "white",
+            user: winner.email
+          },
+        })
+      );
+      return;
+    }
   }
 }

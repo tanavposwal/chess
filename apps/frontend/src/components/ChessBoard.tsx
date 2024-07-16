@@ -47,7 +47,7 @@ export const ChessBoard = ({
   }, [])
 
   return (
-    <div>
+    <div className="rounded overflow-hidden">
       {(isFlipped ? board.slice().reverse() : board).map((row, i) => {
         i = isFlipped ? i + 1 : 8 - i;
         return (
