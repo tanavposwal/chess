@@ -46,6 +46,8 @@ async function Login() {
         </form>
 
         <p className="mt-6 animate-pulse test-sm text-stone-400">{usercount} playing now</p>
+
+        <p className="mt-4 text-sm test-stone-400">made by tanav</p>
       </div>
     </div>
   );
@@ -119,6 +121,8 @@ async function Home() {
           <h4 className="text-xl font-bold">Completed Games</h4>
         </div>
       </section>
+
+      <p className="mt-4 text-sm test-stone-400">made by tanav</p>
     </div>
   );
 }
