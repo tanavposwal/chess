@@ -16,14 +16,12 @@ export function UserInfo({ email }: { email: string }) {
   }, []);
 
   return (
-    <div>
-      <div className="flex md:gap-3 gap-2">
-        <img
-          src={image}
-          className={`md:w-10 w-6 md:h-10 h-6 ${image ? "opacity-100" : "opacity-0"}`}
-        />
-        <h3 className="md:text-md text-md font-semibold">{name}</h3>
-      </div>
+    <div className="flex md:gap-3 gap-2 items-center select-none">
+      <img
+        src={image}
+        className={`md:w-10 w-8 md:h-10 h-8 rounded-md ${image ? "opacity-100" : "opacity-0"}`}
+      />
+      <h3 className="md:text-md text-md font-semibold">{name}</h3>
     </div>
   );
 }
@@ -40,14 +38,14 @@ export function UserImage({ email, color }: { email: string; color: string }) {
   }, []);
 
   return (
-    <div className="relative">
+    <div className="relative w-fit h-fit select-none">
       <img
         src={image}
         className={`rounded-lg w-20 h-20 ${image ? "opacity-100" : "opacity-0"}`}
       />
       <img
         src={`https://assets-themes.chess.com/image/ejgfv/150/${color[0]}k.png`}
-        className="w-9 h-9 absolute bottom-0 right-0 z-10"
+        className="w-10 h-10 absolute -bottom-2 -right-2 z-10"
       />
     </div>
   );

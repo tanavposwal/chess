@@ -7,6 +7,8 @@ import { useSocket } from "@/hooks/useSocket";
 import toast from "react-hot-toast";
 import { signIn, useSession } from "next-auth/react";
 import { UserInfo, UserImage } from "@/components/UserInfo";
+import Confetti from "react-confetti";
+import useWindowSize from "react-use/lib/useWindowSize";
 
 const INIT_GAME = "init_game";
 const MOVE = "move";
@@ -32,6 +34,7 @@ export default function Game() {
     null
   );
   const session = useSession();
+  const { width, height } = useWindowSize();
 
   useEffect(() => {
     setMoveAudio(new Audio("/move-self.mp3"));
@@ -62,7 +65,9 @@ export default function Game() {
         case MOVE:
           const move = message.payload;
           chess.move(move);
+          console.log(move);
           setMoves((prev: any) => [...prev, move]);
+          console.log(moves);
           setBoard(chess.board());
           setMyChance(!mychance);
           if (chess.isCheck()) {
@@ -88,10 +93,10 @@ export default function Game() {
   if (!socket) return <div>Connecting...</div>;
 
   return (
-    <div className="justify-center flex items-center h-screen w-screen">
-      <div className="">
+    <div className="justify-center flex items-center min-h-screen w-screen">
+      <div className="flex gap-4 items-center justify-center">
         <div className="flex md:gap-4 gap-2 md:flex-row flex-col">
-          <div className="flex flex-col md:gap-2 gap-1">
+          <div className="flex flex-col gap-2">
             <div>{opponent && <UserInfo email={opponent} />}</div>
             <ChessBoard
               chess={chess}
@@ -106,118 +111,119 @@ export default function Game() {
             />
             <div>{you && <UserInfo email={you} />}</div>
           </div>
+        </div>
 
-          {/* side panel */}
-          {started && (
-            <div className="w-64 rounded-md bg-stone-700 max-h-[32rem]">
-              <div className="py-4 px-6">
-                <div>
-                  <h1 className="text-lg font-bold">
-                    {mychance ? "YOUR" : "OPPONENT"} chance
-                  </h1>
-                  <div className="mt-2 border-t border-stone-600 pt-2 md:visible hidden">
-                    <p className="text-sm font-semibold text-stone-200">
-                      Turns
-                    </p>
-                    <ul className="list-decimal py-2 px-5 overflow-y-auto">
-                      {moves.map((move) => (
-                        <li
-                          key={move.from + move.to}
-                          className="font-mono text-xs text-stone-400 mb-2 flex gap-2"
-                        >
-                          <span className="rounded-sm border-b border-stone-800 bg-stone-600 py-0.5 px-2">
-                            {move.from}
-                          </span>
-                          <span className="rounded-sm border-b border-stone-800 bg-stone-600 py-0.5 px-2">
-                            {move.to}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
+        {/* side panel */}
+        <div className="w-96 bg-stone-800 border-l border-stone-500 h-screen hidden md:flex">
+          {!started ? (
+            <div>
+              <span className="w-8 h-8 border-t-4 border-t-white border-4 border-transparent rounded-full animate-spin border-white bg-transparent flex"></span>
+            </div>
+          ) : (
+            <div className="py-4 px-6">
+              <div className="">
+                {opponent && (
+                  <UserImage
+                    email={opponent}
+                    color={color == "white" ? "black" : "white"}
+                  />
+                )}
               </div>
+              <h1 className="text-xl font-bold my-4">
+                {mychance ? "YOUR" : "OPPONENT"} chance
+              </h1>
+              <ol className="list-decimal h-96 overflow-y-scroll pt-2 w-72">
+                {moves.map((move) => (
+                  <li
+                    key={move.from + move.to}
+                    className="text-sm pb-1 text-stone-400 flex gap-10 border-b border-stone-600"
+                  >
+                    <span className="font-semibold">{move.from}</span>
+                    <span className="font-semibold">{move.to}</span>
+                  </li>
+                ))}
+              </ol>
             </div>
           )}
         </div>
-
-        {!started && (
-          <div className="h-screen w-full bg-black/30 absolute top-0 left-0 flex justify-center items-center">
-            <div className="px-16 py-12 bg-stone-700 rounded-xl flex flex-col items-center justify-center">
-              <h1 className="text-3xl font-bold mb-4">Play chess online</h1>
-
-              {winner && (
-                <div className="flex flex-col justify-center items-center mb-4 gap-2">
-                  <UserImage email={winner.user} color={winner.winner} />
-                  <h3 className="text-lg font-bold uppercase">
-                    {winner.winner} wins
-                  </h3>
-                </div>
-              )}
-
-              {pending && (
-                <h3 className="text-md text-stone-400">
-                  waiting for other player to join
-                </h3>
-              )}
-
-              {!pending && (
-                <div className="flex justify-center items-center">
-                  {session.status == "loading" ? (
-                    <div>loading...</div>
-                  ) : (
-                    <div>
-                      {session.data?.user ? (
-                        <div className="flex flex-col gap-3 justify-end">
-                          <div className="flex gap-3 items-center">
-                            <img
-                              src={session.data.user.image!}
-                              className="rounded-full w-8 h-8"
-                            />
-                            <h3 className="text-sm">
-                              {session.data.user.name}
-                            </h3>
-                          </div>
-                          <button
-                            className="px-4 py-2 text-xl bg-green-500 hover:bg-green-600 hover:border-green-800 text-white font-bold rounded-xl border-b-4 border-green-700 transition-colors ease-in-out"
-                            onClick={() => {
-                              socket.send(
-                                JSON.stringify({
-                                  type: "LOGIN",
-                                  payload: {
-                                    email: session.data?.user?.email,
-                                  },
-                                })
-                              );
-                              // add user
-                              socket.send(
-                                JSON.stringify({
-                                  type: INIT_GAME,
-                                })
-                              );
-                              // init game
-                              setPending(true);
-                            }}
-                          >
-                            Play
-                          </button>
-                        </div>
-                      ) : (
-                        <button
-                          onClick={() => signIn("google")}
-                          className="bg-blue-500 rounded-md px-4 py-1"
-                        >
-                          Sign in
-                        </button>
-                      )}
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
-        )}
       </div>
+      {!started && (
+        <div className="h-screen w-full bg-black/30 absolute top-0 left-0 flex justify-center items-center">
+          <div className="px-16 py-12 bg-stone-700 rounded-xl flex flex-col items-center justify-center">
+            <h1 className="text-3xl font-bold mb-4">Play chess online</h1>
+
+            {winner && (
+              <div className="flex flex-col justify-center items-center mb-4 gap-2">
+                <Confetti width={width} height={height} recycle={false} />
+                <UserImage email={winner.user} color={winner.winner} />
+                <h3 className="text-lg font-bold uppercase">
+                  {winner.winner} wins
+                </h3>
+              </div>
+            )}
+
+            {pending && (
+              <h3 className="text-md text-stone-400 animate-pulse">
+                waiting for other player to join
+              </h3>
+            )}
+
+            {!pending && (
+              <div className="flex justify-center items-center">
+                {session.status == "loading" ? (
+                  <div>
+                    <span className="w-8 h-8 border-t-4 border-t-white border-4 border-transparent rounded-full animate-spin border-white bg-transparent flex"></span>
+                  </div>
+                ) : (
+                  <div>
+                    {session.data?.user ? (
+                      <div className="flex flex-col gap-3 justify-end">
+                        <div className="flex gap-3 items-center">
+                          <img
+                            src={session.data.user.image!}
+                            className="rounded-full w-8 h-8"
+                          />
+                          <h3 className="text-sm">{session.data.user.name}</h3>
+                        </div>
+                        <button
+                          className="px-4 py-2 text-xl bg-green-500 hover:bg-green-600 hover:border-green-800 text-white font-bold rounded-xl border-b-4 border-green-700 transition-colors ease-in-out"
+                          onClick={() => {
+                            socket.send(
+                              JSON.stringify({
+                                type: "LOGIN",
+                                payload: {
+                                  email: session.data?.user?.email,
+                                },
+                              })
+                            );
+                            // add user
+                            socket.send(
+                              JSON.stringify({
+                                type: INIT_GAME,
+                              })
+                            );
+                            // init game
+                            setPending(true);
+                          }}
+                        >
+                          Play
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => signIn("google")}
+                        className="bg-blue-500 rounded-md px-4 py-1"
+                      >
+                        Sign in
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
