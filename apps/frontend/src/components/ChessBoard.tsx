@@ -1,5 +1,8 @@
 import { Chess, Color, PieceSymbol, Square } from "chess.js";
+import Image from "next/image";
 import { useEffect, useState } from "react";
+// @ts-ignore
+import Piece from 'react-chess-pieces';
 import toast from "react-hot-toast";
 
 const MOVE = "move";
@@ -47,7 +50,7 @@ export const ChessBoard = ({
   }, [])
 
   return (
-    <div className="rounded-md overflow-hidden">
+    <div className="rounded-md overflow-hidden bg-black">
       {(isFlipped ? board.slice().reverse() : board).map((row, i) => {
         i = isFlipped ? i + 1 : 8 - i;
         return (
@@ -63,17 +66,6 @@ export const ChessBoard = ({
                 <div
                   onClick={() => {
                     if (from) {
-                      socket.send(
-                        JSON.stringify({
-                          type: MOVE,
-                          payload: {
-                            from,
-                            to: squareRepresentation,
-                          },
-                        })
-                      );
-
-                      setFrom(null);
                       try {
                         chess.move({
                           from,
@@ -81,6 +73,15 @@ export const ChessBoard = ({
                         });
                         if (moveAudio) moveAudio.play();
                         setBoard(chess.board());
+                        socket.send(
+                          JSON.stringify({
+                            type: MOVE,
+                            payload: {
+                              from,
+                              to: squareRepresentation,
+                            },
+                          })
+                        );
                         setMoves((prev: any) => [
                           ...prev,
                           {
@@ -89,25 +90,29 @@ export const ChessBoard = ({
                           },
                         ]);
                         setMyChance(false);
+                        setFrom(null);
                       } catch (error: any) {
-                        toast.error(`Invalid move`);
                       }
                     }
                   }}
                   key={j}
-                  className={`w-[3.5rem] sm:w-16 md:w-[4.5rem] h-[3.5rem] sm:h-16 md:h-[4.5rem] select-none relative ${
+                  className={`w-[4rem] sm:w-16 md:w-[4.5rem] h-[4rem] sm:h-16 md:h-[4.5rem] select-none relative ${
                     (i + j) % 2 === 0 ? "bg-chess-light" : "bg-chess-dark"
-                  } ${from == squareRepresentation && "ring-2 ring-black z-10 brightness-75"}`}
+                  } ${from == squareRepresentation && "ring-2 ring-[rgb(252,252,108)] z-10 bg-opacity-85"}`}
                 >
                   {started && (
                     <div className="w-full justify-center items-center flex h-full">
                       <div className="h-full justify-center items-center flex flex-col">
-                        {square ? (
-                          <img
-                            className="md:w-20 sm:w-16 w-[3.5rem] cursor-grab"
-                            src={`https://assets-themes.chess.com/image/ejgfv/150/${
+                        {square && (
+                          <Image
+                          alt="piece"
+                            className="md:w-20 sm:w-16 w-[3.5rem] cursor-pointer"
+                            width={1000}
+                            height={1000}
+                            src={`/pieces/${
                               square.color + square.type
                             }.png`}
+                            quality={100}
                             draggable="false"
                             onClick={() => {
                               if (mychance) {
@@ -115,7 +120,7 @@ export const ChessBoard = ({
                               }
                             }}
                           />
-                        ) : null}
+                        )}
                       </div>
                     </div>
                   )}
@@ -128,3 +133,4 @@ export const ChessBoard = ({
     </div>
   );
 };
+

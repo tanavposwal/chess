@@ -88,9 +88,9 @@ export class Game {
       let winner: User;
 
       if (this.moveCount % 2 === 0) {
-        winner = this.player1
-      } else {
         winner = this.player2
+      } else {
+        winner = this.player1
       }
       
       this.player1.socket.send(

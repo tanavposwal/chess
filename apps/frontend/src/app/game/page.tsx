@@ -94,9 +94,9 @@ export default function Game() {
 
   return (
     <div className="justify-center flex items-center min-h-screen w-screen">
-      <div className="flex gap-4 items-center justify-center">
-        <div className="flex md:gap-4 gap-2 md:flex-row flex-col">
-          <div className="flex flex-col gap-2">
+      <div className="flex gap-8 items-center justify-center lg:flex-row flex-col">
+        
+          <div className="flex flex-col gap-2 py-16 md:py-0">
             <div>{opponent && <UserInfo email={opponent} />}</div>
             <ChessBoard
               chess={chess}
@@ -111,10 +111,9 @@ export default function Game() {
             />
             <div>{you && <UserInfo email={you} />}</div>
           </div>
-        </div>
 
         {/* side panel */}
-        <div className="w-96 bg-stone-800 border-l border-stone-500 h-screen hidden md:flex">
+        <div className="w-96 bg-stone-800 md:border-l border-stone-500 h-screen">
           {!started ? (
             <div>
               <span className="w-8 h-8 border-t-4 border-t-white border-4 border-transparent rounded-full animate-spin border-white bg-transparent flex"></span>
